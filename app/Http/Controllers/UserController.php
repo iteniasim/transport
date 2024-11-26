@@ -20,7 +20,7 @@ class UserController extends Controller
 
         $users = User::with('roles')
             ->withTrashed()
-            ->paginate(15, ['id', 'name', 'email', 'deleted_at']);
+            ->paginate(10, ['id', 'name', 'email', 'deleted_at']);
 
         return Inertia::render('User/Index', ['users' => $users]);
     }
