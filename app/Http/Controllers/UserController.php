@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,7 +23,9 @@ class UserController extends Controller
             ->withTrashed()
             ->paginate(10, ['id', 'name', 'email', 'deleted_at']);
 
-        return Inertia::render('User/Index', ['users' => $users]);
+        $roles = Role::all();
+
+        return Inertia::render('User/UserIndex', compact('users', 'roles'));
     }
 
     /**

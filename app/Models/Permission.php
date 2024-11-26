@@ -15,9 +15,21 @@ class Permission extends SpatiePermission
     public static function defaultPermissions(): array
     {
         return [
-            'view_users', 'show_users', 'create_users', 'update_users', 'delete_users',
-            'view_roles', 'show_roles', 'create_roles', 'update_roles', 'delete_roles',
-            'view_tasks', 'show_tasks', 'create_tasks', 'update_tasks', 'delete_tasks',
+            'view_users',
+            'show_users',
+            'create_users',
+            'update_users',
+            'delete_users',
+            'view_roles',
+            'show_roles',
+            'create_roles',
+            'update_roles',
+            'delete_roles',
+            'view_tasks',
+            'show_tasks',
+            'create_tasks',
+            'update_tasks',
+            'delete_tasks',
         ];
     }
 }

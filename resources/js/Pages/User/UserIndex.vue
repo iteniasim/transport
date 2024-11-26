@@ -3,10 +3,23 @@ import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import UserActions from '@/Pages/User/Actions.vue';
 import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import UserEdit from './UserEdit.vue';
+
 const props = defineProps({
     users: Object,
+    roles: Array,
 });
+
 const pageTitle = 'Users';
+
+// Define the selectedUser ref to store the selected user
+const selectedUser = ref(null);
+
+// Update the selectedUser when the event is emitted
+const setSelectedUser = (user) => {
+    selectedUser.value = user;
+};
 </script>
 
 
@@ -40,7 +53,7 @@ const pageTitle = 'Users';
                                 </span>
                             </td>
                             <td>
-                                <UserActions :user="user" />
+                                <UserActions :user="user" @selectedUser="setSelectedUser" />
                             </td>
                         </tr>
                     </tbody>
@@ -49,5 +62,7 @@ const pageTitle = 'Users';
 
             <Pagination :links="props.users.links" />
         </div>
+
+        <UserEdit v-show="selectedUser" :user="selectedUser" :roles='roles' />
     </AppLayout>
 </template>

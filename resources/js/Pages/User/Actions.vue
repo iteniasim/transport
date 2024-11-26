@@ -1,6 +1,7 @@
 <template>
     <div>
-        <button class="btn btn-circle btn-text btn-sm" @click="editUser(props.user)">
+        <button type="button" class="btn btn-circle btn-text btn-sm" aria-haspopup="dialog" aria-expanded="false" aria-controls="edit-user-form-modal"
+            data-overlay="#edit-user-form-modal" @click="$emit('selectedUser', props.user)">
             <span class="icon-[tabler--pencil]"></span>
         </button>
         <button class="btn btn-circle btn-text btn-sm" v-if="!props.user['deleted_at']" @click="deleteAction(props.user)">
@@ -22,10 +23,7 @@ const props = defineProps({
     },
 });
 
-const editUser = (user) => {
-    console.log('Edit user')
-    console.log(user)
-};
+const emits = defineEmits(['selectedUser']);
 
 const deleteAction = (user) => {
     if (confirm("Are you sure you want to delete " + user.name)) {
