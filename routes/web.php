@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))
         ->name('dashboard');
 
-    Route::resource('users', UserController::class)->only(['index', 'edit', 'destroy']);
+    Route::resource('users', UserController::class)->only(['index', 'update', 'destroy']);
     Route::post('users/{user}', [UserController::class, 'restore'])
         ->withTrashed()
         ->name('users.restore');

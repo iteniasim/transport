@@ -63,9 +63,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        Gate::authorize('create_users');
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'role' => ['required', 'exists:roles,id']
+        ]);
+
+        $user->update([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+        ]);
+
+        if ($request->get('role')) {
+            $user->syncRoles([$request->get('role')]);
+        }
+
+        return back()->with('message', 'User data updated successfully');
     }
 
     /**

@@ -1,19 +1,22 @@
 <template>
-    <div>
-        <button type="button" class="btn btn-circle btn-text btn-sm" aria-haspopup="dialog" aria-expanded="false" aria-controls="edit-user-form-modal"
-            data-overlay="#edit-user-form-modal" @click="$emit('selectedUser', props.user)">
-            <span class="icon-[tabler--pencil]"></span>
+    <div class="flex gap-4">
+        <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
+            @click="editAction(props.user)">
+            <PencilSquareIcon class="size-4" />
         </button>
-        <button class="btn btn-circle btn-text btn-sm" v-if="!props.user['deleted_at']" @click="deleteAction(props.user)">
-            <span class="icon-[tabler--trash]"></span>
+        <button class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
+            v-if="!props.user['deleted_at']" @click="deleteAction(props.user)">
+            <TrashIcon class="size-4" />
         </button>
-        <button v-else class="btn btn-circle btn-text btn-sm" @click="restoreAction(props.user)">
-            <span class="icon-[tabler--restore]"></span>
+        <button v-else class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
+            @click="restoreAction(props.user)">
+            <ArrowPathIcon class="size-4" />
         </button>
     </div>
 </template>
 
 <script setup>
+import { ArrowPathIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -23,7 +26,11 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['selectedUser']);
+const emit = defineEmits(['editUser']);
+
+const editAction = (user) => {
+    emit('editUser', user);
+}
 
 const deleteAction = (user) => {
     if (confirm("Are you sure you want to delete " + user.name)) {

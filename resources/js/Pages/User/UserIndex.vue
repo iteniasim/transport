@@ -1,10 +1,10 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import UserActions from '@/Pages/User/Actions.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import UserEdit from './UserEdit.vue';
+import UserTable from './UserTable.vue';
 
 const props = defineProps({
     users: Object,
@@ -13,15 +13,23 @@ const props = defineProps({
 
 const pageTitle = 'Users';
 
-// Define the selectedUser ref to store the selected user
+// State for selected user and modal visibility
 const selectedUser = ref(null);
+const isUserEdit = ref(false);
 
-// Update the selectedUser when the event is emitted
-const setSelectedUser = (user) => {
+// Update selectedUser and open modal
+const setEditUser = (user) => {
     selectedUser.value = user;
+    isUserEdit.value = true;
 };
-</script>
 
+// Reset selectedUser when modal is closed
+watch(isUserEdit, (newVal) => {
+    if (!newVal) {
+        selectedUser.value = null;
+    }
+});
+</script>
 
 <template>
 
@@ -29,40 +37,10 @@ const setSelectedUser = (user) => {
 
     <AppLayout>
         <div class="flex flex-col gap-4">
-            <div class="w-full overflow-x-auto border border-base-content/25 rounded-lg">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Roles</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr v-for="(user, index) in props.users.data" :key="`user-${user.id}`" class="hover">
-                            <th>{{ index + 1 }}</th>
-                            <td class="text-nowrap">{{ user.name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                <span v-for="roleName in user.roles.map((role) => role.name)" :key="roleName + '-' + user.id"
-                                    class="badge badge-soft text-xs">
-                                    {{ roleName }}
-                                </span>
-                            </td>
-                            <td>
-                                <UserActions :user="user" @selectedUser="setSelectedUser" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+            <UserTable :users="props.users.data" @editUser="setEditUser" />
             <Pagination :links="props.users.links" />
         </div>
 
-        <UserEdit v-show="selectedUser" :user="selectedUser" :roles='roles' />
+        <UserEdit v-model="isUserEdit" :user="selectedUser" :roles="props.roles" title="Edit User" />
     </AppLayout>
 </template>
