@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::post('users/{user}', [UserController::class, 'restore'])
         ->withTrashed()
         ->name('users.restore');
+
+    Route::resource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::post('tasks/{task}', [TaskController::class, 'restore'])
+        ->withTrashed()
+        ->name('tasks.restore');
 });

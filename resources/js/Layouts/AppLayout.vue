@@ -39,6 +39,10 @@ const navList = [
         name: "users.index",
         label: "Users",
     },
+    {
+        name: "tasks.index",
+        label: "Tasks",
+    },
 ];
 </script>
 
