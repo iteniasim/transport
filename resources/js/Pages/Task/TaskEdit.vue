@@ -70,7 +70,7 @@ const closeModal = () => {
                         <h2 class="text-base/7 font-semibold text-gray-900">Task Edit</h2>
                         <p class="mt-1 text-sm/6 text-gray-600">Task details will be updated on save.</p>
 
-                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6">
+                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-5">
                             <!-- Task Title -->
                             <div class="sm:col-span-5">
                                 <label for="title" class="block text-sm/6 font-medium text-gray-900">Title</label>
