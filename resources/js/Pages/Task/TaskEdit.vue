@@ -101,20 +101,6 @@ const closeModal = () => {
                                     </select>
                                 </div>
                             </div>
-
-                            <!-- Assigned User -->
-                            <div class="sm:col-span-5">
-                                <label for="user_id" class="block text-sm/6 font-medium text-gray-900">Assigned User</label>
-                                <div class="mt-2">
-                                    <select id="user_id" name="user_id" v-model="form.user_id"
-                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
-                                        <option :value="null">Select user...</option>
-                                        <option v-for="user in props.users" :key="`user-${user.id}`" :value="user.id">
-                                            {{ user.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -62,14 +62,12 @@ class TaskController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'status' => ['required', 'integer'],
-            'user_id' => ['nullable', 'exists:users,id'],
         ]);
 
         $task->update([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'status' => $request->input('status'),
-            'user_id' => $request->input('user_id'),
             'updated_by' => Auth::user()->id,
         ]);
 
@@ -93,11 +91,10 @@ class TaskController extends Controller
      */
     public function claim(Task $task)
     {
-        Gate::authorize('claim_tasks');
+        Gate::authorize('update_tasks');
 
-        $task->update([
+        $task->updateQuietly([
             'user_id' => Auth::user()->id,
-            'updated_by' => Auth::user()->id,
         ]);
 
         return back()->with('success', 'Task claimed successfully.');

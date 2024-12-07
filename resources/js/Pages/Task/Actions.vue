@@ -1,5 +1,11 @@
 <template>
     <div class="flex gap-4">
+        <!-- Claim Task Action -->
+        <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
+            @click="claimTask(props.task)">
+            <UserPlusIcon class="size-4" />
+        </button>
+
         <!-- Edit Action -->
         <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
             @click="editAction(props.task)">
@@ -21,7 +27,8 @@
 </template>
 
 <script setup>
-import { ArrowPathIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
+import { ArrowPathIcon, PencilSquareIcon, TrashIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
+
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -35,6 +42,12 @@ const emit = defineEmits(['editTask']);
 
 const editAction = (task) => {
     emit('editTask', task);
+}
+
+const claimTask = (task) => {
+    if (confirm("Are you sure you want to claim task: " + task.title)) {
+        router.post(route("tasks.claim", task.id));
+    }
 }
 
 const deleteAction = (task) => {
