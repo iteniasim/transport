@@ -32,6 +32,7 @@ watch(isTaskEdit, (newVal) => {
 </script>
 
 <template>
+
     <Head :title="pageTitle" />
 
     <AppLayout>
@@ -44,11 +45,6 @@ watch(isTaskEdit, (newVal) => {
         </div>
 
         <!-- Modal for editing/creating tasks -->
-        <TaskEdit
-            v-model="isTaskEdit"
-            :task="selectedTask"
-            :users="props.users"
-            title="Edit Task"
-        />
+        <TaskEdit v-model="isTaskEdit" :task="selectedTask" :users="props.users" title="Edit Task" />
     </AppLayout>
 </template>

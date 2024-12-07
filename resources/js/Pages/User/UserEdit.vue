@@ -46,6 +46,7 @@ watch(
 // Form submission
 const submitForm = () => {
     form.put(route('users.update', props.user.id));
+    closeModal()
 };
 
 const emit = defineEmits(['update:modelValue']);

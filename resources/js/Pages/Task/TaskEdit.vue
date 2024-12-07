@@ -50,6 +50,7 @@ const submitForm = () => {
     } else {
         form.post(route('tasks.store'));
     }
+    closeModal();
 };
 
 const emit = defineEmits(['update:modelValue']);
