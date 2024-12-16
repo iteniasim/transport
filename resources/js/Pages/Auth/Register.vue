@@ -8,11 +8,19 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+const props = defineProps({
+    roles: {
+        type: Array,
+        required: true,
+    }
+})
+
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    role: null,
     terms: false,
 });
 
@@ -24,6 +32,7 @@ const submit = () => {
 </script>
 
 <template>
+
     <Head title="Register" />
 
     <AuthenticationCard>
@@ -34,55 +43,43 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="name" value="Name" />
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                <TextInput id="name" v-model="form.name" type="text" class="block w-full mt-1" required autofocus autocomplete="name" />
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="username"
-                />
+                <TextInput id="email" v-model="form.email" type="email" class="block w-full mt-1" required autocomplete="username" />
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
+                <TextInput id="password" v-model="form.password" type="password" class="block w-full mt-1" required autocomplete="new-password" />
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
                 <InputLabel for="password_confirmation" value="Confirm Password" />
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="new-password"
-                />
+                <TextInput id="password_confirmation" v-model="form.password_confirmation" type="password" class="block w-full mt-1" required
+                    autocomplete="new-password" />
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="role" value="Role" />
+                <div class="mt-1">
+                    <select id="role" name="role" autocomplete="role-name" v-model="form.role"
+                        class="block w-full text-gray-900 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
+                        <template v-if="!form.role">
+                            <option :value="null">Select role...</option>
+                        </template>
+                        <option v-for="role in props.roles" :key="`role-${role.id}`" :value="role.id">
+                            {{ role.name }}
+                        </option>
+                    </select>
+                </div>
+                <InputError class="mt-2" :message="form.errors.role" />
             </div>
 
             <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
@@ -91,7 +88,11 @@ const submit = () => {
                         <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
 
                         <div class="ms-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy Policy</a>
+                            I agree to the <a target="_blank" :href="route('terms.show')"
+                                class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms
+                                of Service</a> and <a target="_blank" :href="route('policy.show')"
+                                class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy
+                                Policy</a>
                         </div>
                     </div>
                     <InputError class="mt-2" :message="form.errors.terms" />
@@ -99,13 +100,13 @@ const submit = () => {
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Already registered?
+                <Link :href="route('login')"
+                    class="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Already registered?
                 </Link>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
+                    Register </PrimaryButton>
             </div>
         </form>
     </AuthenticationCard>
