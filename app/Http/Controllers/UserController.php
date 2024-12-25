@@ -50,7 +50,7 @@ class UserController extends Controller
             $user->syncRoles([$request->get('role')]);
         }
 
-        return back()->with('message', 'User data updated.');
+        return back()->with('success', 'User updated.');
     }
 
     /**
