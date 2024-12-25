@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -21,7 +22,7 @@ class TaskController extends Controller
         $tasks = Task::with(['user', 'creator', 'updater'])
             ->paginate(10, ['id', 'title', 'description', 'status', 'user_id', 'created_by', 'updated_by']);
 
-        $users = \App\Models\User::select('id', 'name')->get();
+        $users = User::select('id', 'name')->get();
 
         return Inertia::render('Task/TaskIndex', compact('tasks', 'users'));
     }
@@ -36,14 +37,13 @@ class TaskController extends Controller
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'status' => ['required', 'integer'],
             'user_id' => ['nullable', 'exists:users,id'],
         ]);
 
         Task::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'status' => $request->input('status'),
+            'status' => Task::STATUS_PENDING,
             'user_id' => $request->input('user_id'),
             'created_by' => Auth::user()->id,
         ]);
@@ -61,7 +61,11 @@ class TaskController extends Controller
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'status' => ['required', 'integer'],
+            'status' => ['required', 'integer', 'in:' . implode(',', [
+                    Task::STATUS_PENDING,
+                    Task::STATUS_IN_PROGRESS,
+                    Task::STATUS_COMPLETED,
+                ])],
         ]);
 
         $task->update([
@@ -95,6 +99,7 @@ class TaskController extends Controller
 
         $task->updateQuietly([
             'user_id' => Auth::user()->id,
+            'status' => Task::STATUS_IN_PROGRESS,
         ]);
 
         return back()->with('success', 'Task claimed successfully.');

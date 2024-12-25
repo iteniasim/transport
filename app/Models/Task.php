@@ -10,6 +10,10 @@ class Task extends Model
     /** @use HasFactory<\Database\Factories\TaskFactory> */
     use HasFactory;
 
+    const STATUS_PENDING = 0;
+    const STATUS_IN_PROGRESS = 1;
+    const STATUS_COMPLETED = 2;
+
     // Use guarded to protect specific attributes, or use fillable if you prefer whitelisting
     protected $guarded = [];
 
