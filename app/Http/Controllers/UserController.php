@@ -50,7 +50,7 @@ class UserController extends Controller
             $user->syncRoles([$request->get('role')]);
         }
 
-        return back()->with('message', 'User data updated successfully');
+        return back()->with('message', 'User data updated.');
     }
 
     /**
@@ -62,7 +62,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return back()->with('success', 'User deleted successfully.');
+        return back()->with('success', 'User deleted.');
     }
 
     /**
