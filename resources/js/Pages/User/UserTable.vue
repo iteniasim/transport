@@ -3,10 +3,12 @@
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">Users</h1>
-                <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
+                <p v-if="users.length" class="mt-2 text-sm text-gray-700">A list of all the users in your account
+                    including their name, title, email and role.</p>
+                <p v-else class="mt-2 text-sm text-gray-700">No users found.</p>
             </div>
         </div>
-        <div class="flow-root mt-8">
+        <div v-if="users.length" class="flow-root mt-8">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">

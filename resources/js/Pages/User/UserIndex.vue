@@ -38,7 +38,7 @@ watch(isUserEdit, (newVal) => {
     <AppLayout>
         <div class="flex flex-col gap-4">
             <UserTable :users="props.users.data" @editUser="setEditUser" />
-            <Pagination :links="props.users.links" />
+            <Pagination v-if="props.users.total" :links="props.users.links"/>
         </div>
 
         <UserEdit v-model="isUserEdit" :user="selectedUser" :roles="props.roles" title="Edit User" />
