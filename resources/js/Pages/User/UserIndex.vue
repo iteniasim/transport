@@ -3,8 +3,8 @@ import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
-import UserEdit from './UserEdit.vue';
-import UserTable from './UserTable.vue';
+import UserTable from "@/Pages/User/UserTable.vue";
+import UserEdit from "@/Pages/User/UserEdit.vue";
 
 const props = defineProps({
     users: Object,

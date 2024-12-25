@@ -3,8 +3,8 @@ import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
-import TaskEdit from './TaskEdit.vue';
-import TaskTable from './TaskTable.vue';
+import TaskTable from "@/Pages/Task/TaskTable.vue";
+import TaskEdit from "@/Pages/Task/TaskEdit.vue";
 
 const props = defineProps({
     tasks: Object,
@@ -37,14 +37,10 @@ watch(isTaskEdit, (newVal) => {
 
     <AppLayout>
         <div class="flex flex-col gap-4">
-            <!-- Table of tasks -->
             <TaskTable :tasks="props.tasks.data" @editTask="setEditTask" />
-
-            <!-- Pagination for tasks -->
-            <Pagination :links="props.tasks.links" />
+            <Pagination v-if="props.tasks.total" :links="props.tasks.links"/>
         </div>
 
-        <!-- Modal for editing/creating tasks -->
         <TaskEdit v-model="isTaskEdit" :task="selectedTask" :users="props.users" title="Edit Task" />
     </AppLayout>
 </template>
