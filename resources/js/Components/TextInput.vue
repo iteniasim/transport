@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 
 defineProps({
     modelValue: String,
@@ -19,10 +19,8 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <input
-        ref="input"
-        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-    >
+    <input ref="input"
+           :value="modelValue"
+           class="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+           @input="$emit('update:modelValue', $event.target.value)"/>
 </template>

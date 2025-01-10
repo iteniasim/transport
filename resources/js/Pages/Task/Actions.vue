@@ -2,34 +2,34 @@
     <div class="flex gap-4">
         <!-- Claim Task Action -->
         <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
-            @click="claimTask(props.task)">
+                aria-label="Claim Task" @click="claimTask(props.task)">
             <UserPlusIcon class="size-4" />
         </button>
 
         <!-- Edit Action -->
         <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
-            @click="editAction(props.task)">
+                aria-label="Edit Task" @click="editAction(props.task)">
             <PencilSquareIcon class="size-4" />
         </button>
 
         <!-- Delete Action -->
         <button class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
-            v-if="!props.task['deleted_at']" @click="deleteAction(props.task)">
+                v-if="!props.task['deleted_at']" aria-label="Delete Task" @click="deleteAction(props.task)">
             <TrashIcon class="size-4" />
         </button>
 
         <!-- Restore Action -->
         <button v-else class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
-            @click="restoreAction(props.task)">
+                aria-label="Restore Task" @click="restoreAction(props.task)">
             <ArrowPathIcon class="size-4" />
         </button>
     </div>
 </template>
 
 <script setup>
-import { ArrowPathIcon, PencilSquareIcon, TrashIcon, UserPlusIcon } from '@heroicons/vue/24/solid';
+import {ArrowPathIcon, PencilSquareIcon, TrashIcon, UserPlusIcon} from '@heroicons/vue/24/solid';
 
-import { router } from "@inertiajs/vue3";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     task: {

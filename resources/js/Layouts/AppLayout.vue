@@ -5,8 +5,8 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import {Head, Link, router} from "@inertiajs/vue3";
+import {ref} from "vue";
 
 defineProps({
     title: String,
@@ -61,7 +61,7 @@ const navList = [
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('dashboard')" aria-label="Application Logo">
                                 <ApplicationMark class="block h-9 w-auto" />
                                 </Link>
                             </div>

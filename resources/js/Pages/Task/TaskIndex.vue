@@ -1,10 +1,11 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import {Head} from '@inertiajs/vue3';
+import {ref, watch} from 'vue';
 import TaskTable from "@/Pages/Task/TaskTable.vue";
 import TaskEdit from "@/Pages/Task/TaskEdit.vue";
+import TaskCreate from "@/Pages/Task/TaskCreate.vue";
 
 const props = defineProps({
     tasks: Object,
@@ -15,8 +16,13 @@ const pageTitle = 'Tasks';
 
 // State for selected task and modal visibility
 const selectedTask = ref(null);
+const isTaskCreate = ref(false);
 const isTaskEdit = ref(false);
 
+// Update selectedTask and open modal
+const openCreateTaskModal = () => {
+    isTaskCreate.value = true;
+};
 // Update selectedTask and open modal
 const setEditTask = (task) => {
     selectedTask.value = task;
@@ -37,10 +43,11 @@ watch(isTaskEdit, (newVal) => {
 
     <AppLayout>
         <div class="flex flex-col gap-4">
-            <TaskTable :tasks="props.tasks.data" @editTask="setEditTask" />
+            <TaskTable :tasks="props.tasks.data" @createTask="openCreateTaskModal" @editTask="setEditTask"/>
             <Pagination v-if="props.tasks.total" :links="props.tasks.links"/>
         </div>
 
-        <TaskEdit v-model="isTaskEdit" :task="selectedTask" :users="props.users" title="Edit Task" />
+        <TaskCreate v-model="isTaskCreate" :users="props.users"/>
+        <TaskEdit v-model="isTaskEdit" :task="selectedTask" :users="props.users"/>
     </AppLayout>
 </template>

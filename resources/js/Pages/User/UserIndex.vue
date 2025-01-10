@@ -1,8 +1,8 @@
 <script setup>
 import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import {Head} from '@inertiajs/vue3';
+import {ref, watch} from 'vue';
 import UserTable from "@/Pages/User/UserTable.vue";
 import UserEdit from "@/Pages/User/UserEdit.vue";
 
@@ -41,6 +41,6 @@ watch(isUserEdit, (newVal) => {
             <Pagination v-if="props.users.total" :links="props.users.links"/>
         </div>
 
-        <UserEdit v-model="isUserEdit" :user="selectedUser" :roles="props.roles" title="Edit User" />
+        <UserEdit v-model="isUserEdit" :roles="props.roles" :user="selectedUser"/>
     </AppLayout>
 </template>

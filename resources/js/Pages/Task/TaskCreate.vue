@@ -1,15 +1,11 @@
 <script setup>
 import ModalComponent from '@/Components/ModalComponent.vue';
 import {useForm} from '@inertiajs/vue3';
-import {watch} from 'vue';
 
 const props = defineProps({
     modelValue: {
         type: Boolean,
         default: true,
-    },
-    task: {
-        type: Object,
     },
     users: {
         type: Array,
@@ -21,27 +17,12 @@ const props = defineProps({
 const form = useForm({
     title: '',
     description: '',
-    status: 0,
     user_id: null,
 });
 
-// Watch for changes in props.task and update the form
-watch(
-    () => props.task,
-    (newTask) => {
-        if (newTask) {
-            form.title = newTask.title || '';
-            form.description = newTask.description || '';
-            form.status = newTask.status || 0;
-            form.user_id = newTask.user_id || null;
-        }
-    },
-    {immediate: true}
-);
-
 // Form submission
 const submitForm = () => {
-    form.put(route('tasks.update', props.task.id));
+    form.post(route('tasks.store'));
     closeModal();
 };
 
@@ -59,8 +40,8 @@ const closeModal = () => {
                 <div class="space-y-12">
 
                     <div class="border-b border-gray-900/10 pb-12">
-                        <h2 class="text-base/7 font-semibold text-gray-900">Task Edit</h2>
-                        <p class="mt-1 text-sm/6 text-gray-600">Task details will be updated on save.</p>
+                        <h2 class="text-base/7 font-semibold text-gray-900">Task Create</h2>
+                        <p class="mt-1 text-sm/6 text-gray-600">Task will be created on save.</p>
 
                         <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-5">
                             <!-- Task Title -->
@@ -85,16 +66,17 @@ const closeModal = () => {
                                 </div>
                             </div>
 
-                            <!-- Task Status -->
+                            <!-- Task Assigned to -->
                             <div class="sm:col-span-5">
-                                <label class="block text-sm/6 font-medium text-gray-900" for="status">Status</label>
+                                <label class="block text-sm/6 font-medium text-gray-900" for="status">Assigned to</label>
                                 <div class="mt-2">
-                                    <select id="status" v-model="form.status"
+                                    <select id="status" v-model="form.user_id"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                             name="status">
-                                        <option :value="0">Pending</option>
-                                        <option :value="1">In Progress</option>
-                                        <option :value="2">Completed</option>
+                                        <option :value="null">None</option>
+                                        <template v-for="user in props.users" :key="`assigned-to-${user.id}`">
+                                            <option :value="user.id">{{ user.name }}</option>
+                                        </template>
                                     </select>
                                 </div>
                             </div>

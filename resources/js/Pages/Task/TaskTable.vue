@@ -8,7 +8,7 @@
                 <p v-else class="mt-2 text-sm text-gray-700">No tasks found.</p>
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <button type="button"
+                <button type="button" @click="setCreateTask"
                     class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     Add task
                 </button>
@@ -32,8 +32,10 @@
                             <tbody class="divide-y divide-gray-200 bg-white">
                                 <tr v-for="(task) in tasks" :key="`task-${task.id}`">
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ task.title }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.status }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.user?.name || 'Unassigned' }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <StatusBadge :color="getTaskStatusColor(task.status)" :content="getTaskStatusLabel(task.status)"/>
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.user?.name || '-' }}</td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <TaskActions :task="task" @editTask="setEditTask" />
                                     </td>
@@ -48,8 +50,10 @@
 </template>
 
 <script setup>
-import TaskActions from '@/Pages/Task/Actions.vue';  // Update this path if needed
-import { ref } from 'vue';
+import TaskActions from '@/Pages/Task/Actions.vue'; // Update this path if needed
+import {ref} from 'vue';
+import {useMappings} from "@/Composables/useMappings.js";
+import StatusBadge from "@/Components/StatusBadge.vue";
 
 const props = defineProps({
     tasks: {
@@ -60,8 +64,14 @@ const props = defineProps({
 
 const emit = defineEmits(['editTask']);
 
+const {getTaskStatusLabel, getTaskStatusColor} = useMappings()
 // Define the selectedTask ref to store the selected task
 const selectedTask = ref(null);
+
+// Open create task model when the event is emitted
+const setCreateTask = () => {
+    emit('createTask')
+};
 
 // Update the selectedTask when the event is emitted
 const setEditTask = (task) => {

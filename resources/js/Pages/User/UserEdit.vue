@@ -1,7 +1,7 @@
 <script setup>
 import ModalComponent from '@/Components/ModalComponent.vue';
-import { useForm } from '@inertiajs/vue3';
-import { watch } from 'vue';
+import {useForm} from '@inertiajs/vue3';
+import {watch} from 'vue';
 
 const props = defineProps({
     modelValue: {
@@ -15,10 +15,6 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    title: {
-        type: String,
-        required: true,
-    }
 });
 
 // Initialize form with useForm
