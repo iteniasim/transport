@@ -21,8 +21,8 @@ class CspPolicy extends Policy
             ->addDirective(Directive::DEFAULT, Keyword::SELF)
             // Form actions
             ->addDirective(Directive::FORM_ACTION, Keyword::SELF)
-            // Allow images from any source
-            ->addDirective(Directive::IMG, '*')
+            // Allow images from any source and data URIs
+            ->addDirective(Directive::IMG, [Keyword::SELF, '*', 'data:'])
             // Media
             ->addDirective(Directive::MEDIA, Keyword::SELF)
             // Block object tags
