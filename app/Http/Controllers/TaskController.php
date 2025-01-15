@@ -95,13 +95,18 @@ class TaskController extends Controller
      */
     public function claim(Task $task)
     {
-        Gate::authorize('update_tasks');
+        Gate::authorize('claim_tasks');
 
-        $task->updateQuietly([
-            'user_id' => Auth::user()->id,
-            'status' => Task::STATUS_IN_PROGRESS,
-        ]);
+        // Check if user_id is null or matches the authenticated user's id, and status is STATUS_PENDING
+        if (($task->user_id === null || $task->user_id === Auth::user()->id) && $task->status === Task::STATUS_PENDING) {
+            $task->updateQuietly([
+                'user_id' => Auth::user()->id,
+                'status' => Task::STATUS_IN_PROGRESS,
+            ]);
 
-        return back()->with('success', 'Task claimed successfully.');
+            return back()->with('success', 'Task claimed successfully.');
+        }
+
+        return back()->with('error', 'You cannot claim this task.');
     }
 }

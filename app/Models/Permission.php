@@ -16,20 +16,21 @@ class Permission extends SpatiePermission
     {
         return [
             'view_users',
-            'show_users',
-            'create_users',
             'update_users',
             'delete_users',
+            'restore_users',
+
             'view_roles',
             'show_roles',
             'create_roles',
             'update_roles',
             'delete_roles',
+
             'view_tasks',
-            'show_tasks',
             'create_tasks',
             'update_tasks',
             'delete_tasks',
+            'claim_tasks',
         ];
     }
 }

@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        Gate::authorize('create_users');
+        Gate::authorize('update_users');
 
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -70,7 +70,7 @@ class UserController extends Controller
      */
     public function restore(User $user): RedirectResponse
     {
-        Gate::authorize('delete_users');
+        Gate::authorize('restore_users');
 
         $user->restore();
 
