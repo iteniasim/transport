@@ -49,6 +49,8 @@ const emit = defineEmits(['update:modelValue']);
 
 const closeModal = () => {
     emit('update:modelValue', false);
+
+    form.reset();
 }
 </script>
 
