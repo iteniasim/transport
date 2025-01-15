@@ -5,6 +5,9 @@ namespace App\Policies;
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
 use Spatie\Csp\Policies\Basic;
+use Illuminate\Http\Request;
+use Spatie\Csp;
+use Symfony\Component\HttpFoundation\Response;
 
 class CspPolicy extends Basic
 {
@@ -24,5 +27,14 @@ class CspPolicy extends Basic
             ->addDirective(Directive::FONT, 'https://fonts.bunny.net')
             // Allow inline styles
             ->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE);
+    }
+
+    public function shouldBeApplied(Request $request, Response $response): bool
+    {
+        if (config('app.debug') && ($response->isClientError() || $response->isServerError())) {
+            return false;
+        }
+
+        return parent::shouldBeApplied($request, $response);
     }
 }
