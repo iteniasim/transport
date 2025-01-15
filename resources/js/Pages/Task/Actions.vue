@@ -46,19 +46,25 @@ const editAction = (task) => {
 
 const claimTask = (task) => {
     if (confirm("Are you sure you want to claim task: " + task.title)) {
-        router.post(route("tasks.claim", task.id));
+        router.post(route("tasks.claim", task.id), {}, {
+            preserveScroll: true,
+        });
     }
 }
 
 const deleteAction = (task) => {
     if (confirm("Are you sure you want to delete task: " + task.title)) {
-        router.delete(route("tasks.destroy", task.id));
+        router.delete(route("tasks.destroy", task.id), {
+            preserveScroll: true,
+        });
     }
 };
 
 const restoreAction = (task) => {
     if (confirm("Are you sure you want to restore task: " + task.title)) {
-        router.post(route("tasks.restore", task.id));
+        router.post(route("tasks.restore", task.id), {}, {
+            preserveScroll: true,
+        });
     }
 };
 </script>

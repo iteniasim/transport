@@ -34,13 +34,17 @@ const editAction = (user) => {
 
 const deleteAction = (user) => {
     if (confirm("Are you sure you want to delete " + user.name)) {
-        router.delete(route("users.destroy", user.id));
+        router.delete(route("users.destroy", user.id), {
+            preserveScroll: true,
+        });
     }
 };
 
 const restoreAction = (user) => {
     if (confirm("Are you sure you want to restore " + user.name)) {
-        router.post(route("users.restore", user.id));
+        router.post(route("users.restore", user.id), {}, {
+            preserveScroll: true,
+        });
     }
 };
 </script>

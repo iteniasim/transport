@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -15,12 +16,19 @@ class TaskController extends Controller
     /**
      * Display a listing of tasks.
      */
-    public function index(): Response
+    public function index(Request $request)
     {
         Gate::authorize('view_tasks');
 
-        $tasks = Task::with(['user', 'creator', 'updater'])
-            ->paginate(10, ['id', 'title', 'description', 'status', 'user_id', 'created_by', 'updated_by']);
+        $tasks = Task::query()
+            ->when($request->has('withtrashed'), function ($query) {
+                $query->withTrashed();
+            })
+            ->when($request->has('onlytrashed'), function ($query) {
+                $query->onlyTrashed();
+            })
+            ->with(['user', 'creator', 'updater'])
+            ->paginate(10, ['id', 'title', 'description', 'status', 'user_id', 'created_by', 'updated_by', 'deleted_at']);
 
         $users = User::select(['id', 'name'])->get();
 
@@ -30,7 +38,7 @@ class TaskController extends Controller
     /**
      * Store a newly created task in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         Gate::authorize('create_tasks');
 
@@ -54,7 +62,7 @@ class TaskController extends Controller
     /**
      * Update the specified task in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task): RedirectResponse
     {
         Gate::authorize('update_tasks');
 
@@ -81,7 +89,7 @@ class TaskController extends Controller
     /**
      * Remove the specified task from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): RedirectResponse
     {
         Gate::authorize('delete_tasks');
 
@@ -91,9 +99,21 @@ class TaskController extends Controller
     }
 
     /**
+     * Restore the specified resource from storage.
+     */
+    public function restore(Task $task): RedirectResponse
+    {
+        Gate::authorize('restore_tasks');
+
+        $task->restore();
+
+        return back()->with('success', 'Task restored.');
+    }
+
+    /**
      * Claim a task by assigning it to the authenticated user.
      */
-    public function claim(Task $task)
+    public function claim(Task $task): RedirectResponse
     {
         Gate::authorize('claim_tasks');
 
