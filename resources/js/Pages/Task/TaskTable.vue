@@ -62,7 +62,7 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['editTask']);
+const emit = defineEmits(['create-task', 'edit-task']);
 
 const {getTaskStatusLabel, getTaskStatusColor} = useMappings()
 // Define the selectedTask ref to store the selected task
@@ -70,12 +70,12 @@ const selectedTask = ref(null);
 
 // Open create task model when the event is emitted
 const setCreateTask = () => {
-    emit('createTask')
+    emit('create-task')
 };
 
 // Update the selectedTask when the event is emitted
 const setEditTask = (task) => {
     selectedTask.value = task;
-    emit('editTask', task)
+    emit('edit-task', task)
 };
 </script>
