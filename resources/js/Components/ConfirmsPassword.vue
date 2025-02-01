@@ -1,10 +1,10 @@
 <script setup>
-import { ref, reactive, nextTick } from 'vue';
-import DialogModal from './DialogModal.vue';
-import InputError from './InputError.vue';
-import PrimaryButton from './PrimaryButton.vue';
-import SecondaryButton from './SecondaryButton.vue';
-import TextInput from './TextInput.vue';
+import {nextTick, reactive, ref} from 'vue';
+import DialogModal from "@/Components/DialogModal.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import InputError from "@/Components/InputError.vue";
+import TextInput from "@/Components/TextInput.vue";
 
 const emit = defineEmits(['confirmed']);
 
@@ -73,7 +73,7 @@ const closeModal = () => {
 <template>
     <span>
         <span @click="startConfirmingPassword">
-            <slot />
+            <slot/>
         </span>
 
         <DialogModal :show="confirmingPassword" @close="closeModal">
@@ -88,14 +88,14 @@ const closeModal = () => {
                     <TextInput
                         ref="passwordInput"
                         v-model="form.password"
-                        type="password"
+                        autocomplete="current-password"
                         class="mt-1 block w-3/4"
                         placeholder="Password"
-                        autocomplete="current-password"
+                        type="password"
                         @keyup.enter="confirmPassword"
                     />
 
-                    <InputError :message="form.error" class="mt-2" />
+                    <InputError :message="form.error" class="mt-2"/>
                 </div>
             </template>
 
@@ -105,9 +105,9 @@ const closeModal = () => {
                 </SecondaryButton>
 
                 <PrimaryButton
-                    class="ms-3"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    class="ms-3"
                     @click="confirmPassword"
                 >
                     {{ button }}
