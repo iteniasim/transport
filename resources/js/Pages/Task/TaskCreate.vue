@@ -15,8 +15,12 @@ const props = defineProps({
 
 // Initialize form with useForm
 const form = useForm({
-    title: '',
-    description: '',
+    name: '',
+    load_type: '',
+    from: '',
+    to: '',
+    weight: '',
+    cost: '',
     user_id: null,
 });
 
@@ -45,33 +49,79 @@ const closeModal = () => {
                         <h2 class="text-base/7 font-semibold text-gray-900">Task Create</h2>
                         <p class="mt-1 text-sm/6 text-gray-600">Task will be created on save.</p>
 
-                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-5">
+                        <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-5">
                             <!-- Task Title -->
                             <div class="sm:col-span-5">
-                                <label class="block text-sm/6 font-medium text-gray-900" for="title">Title</label>
-                                <div class="mt-2">
-                                    <input id="title" v-model="form.title" autocomplete="title"
+                                <label class="block text-sm/6 font-medium text-gray-900" for="name">Name</label>
+                                <div>
+                                    <input id="name" v-model="form.name" autocomplete="name"
                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                           name="title"
+                                           name="name"
                                            type="text"/>
                                 </div>
                             </div>
 
-                            <!-- Task Description -->
+                            <!-- Task Load Type -->
                             <div class="sm:col-span-5">
-                                <label class="block text-sm/6 font-medium text-gray-900"
-                                       for="description">Description</label>
-                                <div class="mt-2">
-                                    <textarea id="description" v-model="form.description"
-                                              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                              name="description"/>
+                                <label class="block text-sm/6 font-medium text-gray-900" for="load_type">Load Type</label>
+                                <div>
+                                    <input id="load_type" v-model="form.load_type" autocomplete="load_type"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                           name="load_type"
+                                           type="text"/>
                                 </div>
                             </div>
 
-                            <!-- Task Assigned to -->
+                            <!-- Task From -->
+                            <div class="sm:col-span-5">
+                                <label class="block text-sm/6 font-medium text-gray-900" for="from">From</label>
+                                <div>
+                                    <input id="from" v-model="form.from" autocomplete="from"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                           name="from"
+                                           type="text"/>
+                                </div>
+                            </div>
+
+                            <!-- Task To -->
+                            <div class="sm:col-span-5">
+                                <label class="block text-sm/6 font-medium text-gray-900" for="to">To</label>
+                                <div>
+                                    <input id="to" v-model="form.to" autocomplete="to"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                           name="to"
+                                           type="text"/>
+                                </div>
+                            </div>
+
+
+                            <!-- Task Weight -->
+                            <div class="sm:col-span-5">
+                                <label class="block text-sm/6 font-medium text-gray-900" for="weight">Weight</label>
+                                <div>
+                                    <input id="weight" v-model="form.weight" autocomplete="weight"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                           name="weight"
+                                           type="text"/>
+                                </div>
+                            </div>
+
+
+                            <!-- Task Cost -->
+                            <div class="sm:col-span-5">
+                                <label class="block text-sm/6 font-medium text-gray-900" for="cost">Cost</label>
+                                <div>
+                                    <input id="cost" v-model="form.cost" autocomplete="cost"
+                                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                           name="cost"
+                                           type="text"/>
+                                </div>
+                            </div>
+
+                            <!-- Task Assigned To -->
                             <div class="sm:col-span-5">
                                 <label class="block text-sm/6 font-medium text-gray-900" for="status">Assigned to</label>
-                                <div class="mt-2">
+                                <div>
                                     <select id="status" v-model="form.user_id"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                             name="status">

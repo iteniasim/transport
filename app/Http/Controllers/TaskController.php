@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class TaskController extends Controller
 {
@@ -28,7 +27,7 @@ class TaskController extends Controller
                 $query->onlyTrashed();
             })
             ->with(['user', 'creator', 'updater'])
-            ->paginate(10, ['id', 'title', 'description', 'status', 'user_id', 'created_by', 'updated_by', 'deleted_at']);
+            ->paginate(10);
 
         $users = User::select(['id', 'name'])->get();
 
@@ -43,16 +42,24 @@ class TaskController extends Controller
         Gate::authorize('create_tasks');
 
         $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'load_type' => ['required', 'string'],
+            'from' => ['required', 'string'],
+            'to' => ['required', 'string'],
+            'weight' => ['required', 'numeric'],
+            'cost' => ['required', 'numeric', 'min:1'],
             'user_id' => ['nullable', 'exists:users,id'],
         ]);
 
         Task::create([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
+            'name' => $request->input('name'),
+            'load_type' => $request->input('load_type'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+            'weight' => $request->input('weight'),
+            'cost' => $request->input('cost'),
             'status' => Task::STATUS_PENDING,
-            'user_id' => $request->input('user_id'),
+            'user_id' => $request->input('user_id') ?? Auth::user()->id, // Assign current user if null
             'created_by' => Auth::user()->id,
         ]);
 
@@ -67,8 +74,12 @@ class TaskController extends Controller
         Gate::authorize('update_tasks');
 
         $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'load_type' => ['required', 'string'],
+            'from' => ['required', 'string'],
+            'to' => ['required', 'string'],
+            'weight' => ['required', 'numeric'],
+            'cost' => ['required', 'numeric', 'min:1'],
             'status' => ['required', 'integer', 'in:' . implode(',', [
                     Task::STATUS_PENDING,
                     Task::STATUS_IN_PROGRESS,
@@ -77,8 +88,12 @@ class TaskController extends Controller
         ]);
 
         $task->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
+            'name' => $request->input('name'),
+            'load_type' => $request->input('load_type'),
+            'from' => $request->input('from'),
+            'to' => $request->input('to'),
+            'weight' => $request->input('weight'),
+            'cost' => $request->input('cost'),
             'status' => $request->input('status'),
             'updated_by' => Auth::user()->id,
         ]);

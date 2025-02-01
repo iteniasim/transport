@@ -3,8 +3,7 @@
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">Tasks</h1>
-                <p v-if="tasks.length" class="mt-2 text-sm text-gray-700">A list of all the tasks, including their
-                    title, description, status, and assigned user.</p>
+                <p v-if="tasks.length" class="mt-2 text-sm text-gray-700">A list of all the tasks.</p>
                 <p v-else class="mt-2 text-sm text-gray-700">No tasks found.</p>
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -21,8 +20,13 @@
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Title</th>
-                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                                    <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" scope="col">Name</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Load Type</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">From</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">To</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Weight</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Cost</th>
+                                    <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" scope="col">Status</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assigned User</th>
                                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                         <span class="sr-only">Actions</span>
@@ -31,7 +35,12 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white">
                                 <tr v-for="(task) in tasks" :key="`task-${task.id}`">
-                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ task.title }}</td>
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ task.name }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.load_type }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.from }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.to }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.weight }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ task.cost }}</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                         <StatusBadge :color="getTaskStatusColor(task.status)" :content="getTaskStatusLabel(task.status)"/>
                                     </td>

@@ -3,7 +3,7 @@ import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {Head} from '@inertiajs/vue3';
 import {ref, watch} from 'vue';
-import TaskTable from "@/Pages/Task/TaskTable.vue";
+import TaskTable from "@/Pages/Task/TaskGrid.vue";
 import TaskEdit from "@/Pages/Task/TaskEdit.vue";
 import TaskCreate from "@/Pages/Task/TaskCreate.vue";
 

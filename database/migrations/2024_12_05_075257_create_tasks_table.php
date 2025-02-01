@@ -14,8 +14,12 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
+            $table->string('name');
+            $table->string('load_type');
+            $table->string('from');
+            $table->string('to');
+            $table->decimal('weight');
+            $table->decimal('cost');
             $table->integer('status')->default(0);
             $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
