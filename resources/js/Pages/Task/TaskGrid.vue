@@ -51,10 +51,9 @@
                                         <span class="font-semibold">Cost:</span>
                                         <span>{{ task.cost }}</span>
                                     </div>
-                                    <div class="px-3 text-sm text-gray-500">
+                                    <div v-if="task.user" class="px-3 text-sm text-gray-500">
                                         <span class="font-semibold">Assigned User:</span>
                                         <span>{{ task.user?.name || '-' }}</span>
-
                                     </div>
                                 </div>
                             </div>

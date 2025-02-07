@@ -32,6 +32,7 @@ class Permission extends SpatiePermission
             'delete_tasks',
             'restore_tasks',
             'claim_tasks',
+            'request_tasks',
         ];
     }
 }

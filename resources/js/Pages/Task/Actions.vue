@@ -1,9 +1,9 @@
 <template>
     <div class="flex gap-4">
         <template v-if="!isTaskDeleted">
-            <!-- Claim Task Action -->
+            <!-- Request Task Action -->
             <button type="button" class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
-                    aria-label="Claim Task" @click="claimTask(props.task)">
+                    aria-label="Request Task" @click="requestTask(props.task)">
                 <UserPlusIcon class="size-4" />
             </button>
 
@@ -51,9 +51,9 @@ const editAction = (task) => {
     emit('editTask', task);
 }
 
-const claimTask = (task) => {
-    if (confirm("Are you sure you want to claim task: " + task.title)) {
-        router.post(route("tasks.claim", task.id), {}, {
+const requestTask = (task) => {
+    if (confirm("Are you sure you want to request task: " + task.title)) {
+        router.post(route("tasks.request", task.id), {}, {
             preserveScroll: true,
         });
     }

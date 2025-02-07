@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf6a95ff216425d70236b0df84e4fb4a",
+    "content-hash": "a48a7f613b59369b78ff674dfc5eeec8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1233,6 +1233,82 @@
                 }
             ],
             "time": "2024-12-05T14:52:50+00:00"
+        },
+        {
+            "name": "itsgoingd/clockwork",
+            "version": "v5.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itsgoingd/clockwork.git",
+                "reference": "f5b14e5c871f5b5552ec8f8c146794f0aaae8b4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itsgoingd/clockwork/zipball/f5b14e5c871f5b5552ec8f8c146794f0aaae8b4c",
+                "reference": "f5b14e5c871f5b5552ec8f8c146794f0aaae8b4c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.1"
+            },
+            "suggest": {
+                "ext-pdo": "Needed in order to use a SQL database for metadata storage",
+                "ext-pdo_mysql": "Needed in order to use MySQL for metadata storage",
+                "ext-pdo_postgres": "Needed in order to use Postgres for metadata storage",
+                "ext-pdo_sqlite": "Needed in order to use a SQLite for metadata storage",
+                "ext-redis": "Needed in order to use Redis for metadata storage",
+                "php-http/discovery": "Vanilla integration - required for the middleware zero-configuration setup"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Clockwork": "Clockwork\\Support\\Laravel\\Facade"
+                    },
+                    "providers": [
+                        "Clockwork\\Support\\Laravel\\ClockworkServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Clockwork\\": "Clockwork/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "itsgoingd",
+                    "email": "itsgoingd@luzer.sk",
+                    "homepage": "https://twitter.com/itsgoingd"
+                }
+            ],
+            "description": "php dev tools in your browser",
+            "homepage": "https://underground.works/clockwork",
+            "keywords": [
+                "Devtools",
+                "debugging",
+                "laravel",
+                "logging",
+                "lumen",
+                "profiling",
+                "slim"
+            ],
+            "support": {
+                "issues": "https://github.com/itsgoingd/clockwork/issues",
+                "source": "https://github.com/itsgoingd/clockwork/tree/v5.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/itsgoingd",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-01-12T15:58:56+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -7653,16 +7729,16 @@
         },
         {
             "name": "laravel/telescope",
-            "version": "v5.3.0",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/telescope.git",
-                "reference": "216fd8d41eb17b49469bea9359b4f0f711b882b3"
+                "reference": "bc3df85f1d5653c9473f1f858c98309345ebd1ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/216fd8d41eb17b49469bea9359b4f0f711b882b3",
-                "reference": "216fd8d41eb17b49469bea9359b4f0f711b882b3",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/bc3df85f1d5653c9473f1f858c98309345ebd1ca",
+                "reference": "bc3df85f1d5653c9473f1f858c98309345ebd1ca",
                 "shasum": ""
             },
             "require": {
@@ -7716,9 +7792,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v5.3.0"
+                "source": "https://github.com/laravel/telescope/tree/v5.4.0"
             },
-            "time": "2024-12-26T21:37:35+00:00"
+            "time": "2025-01-24T15:55:16+00:00"
         },
         {
             "name": "mockery/mockery",
