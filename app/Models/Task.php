@@ -12,7 +12,7 @@ class Task extends Model
 {
     /** @use HasFactory<TaskFactory> */
     use HasFactory;
-    use softDeletes;
+    use SoftDeletes;
 
     const STATUS_PENDING = 0;
     const STATUS_IN_PROGRESS = 1;
@@ -30,6 +30,16 @@ class Task extends Model
     }
 
     /**
+     * The users interested in the task
+     */
+    public function requestedUsers()
+    {
+        return $this->belongsToMany(User::class, 'task_user')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
+
+    /**
      * The user who created the task.
      */
     public function creator(): BelongsTo
@@ -43,5 +53,21 @@ class Task extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Method to check if the task is unclaimed and pending
+     */
+    public function isAvailableForRequest(): bool
+    {
+        return $this->user_id === null && $this->status === self::STATUS_PENDING;
+    }
+
+    /**
+     * Check if the authenticated user has requested the task.
+     */
+    public function request_submitted(): bool
+    {
+        return $this->requestedUsers->contains('id', auth()->id());
     }
 }

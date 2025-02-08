@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TaskRequestNotification;
 use App\Models\Task;
+use App\Models\TaskRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -26,8 +29,15 @@ class TaskController extends Controller
             ->when($request->has('onlytrashed'), function ($query) {
                 $query->onlyTrashed();
             })
-            ->with(['user', 'creator', 'updater'])
+            ->with(['user', 'creator', 'updater', 'requestedUsers'])
             ->paginate(10);
+
+        // Add a flag for each task to check if the authenticated user has requested it
+        $tasks->getCollection()->transform(function ($task) {
+            $task->request_submitted = $task->request_submitted(); // Use the helper method
+            $task->makeHidden('requestedUsers');
+            return $task;
+        });
 
         $users = User::select(['id', 'name'])->get();
 
@@ -143,5 +153,27 @@ class TaskController extends Controller
         }
 
         return back()->with('error', 'You cannot claim this task.');
+    }
+
+    /**
+     * Request a task from the task creator.
+     */
+    public function request(Task $task)
+    {
+        Gate::authorize('request_tasks');
+
+        if ($task->isAvailableForRequest()) {
+            if (!$task->requestedUsers()->where('user_id', auth()->id())->exists()) {
+                $task->requestedUsers()->attach(auth()->id(), ['status' => TaskRequest::STATUS_PENDING]);
+
+                Mail::to($task->creator->email)->send(new TaskRequestNotification($task));
+
+                return back()->with('success', 'Task requested successfully.');
+            }
+
+            return back()->with('info', 'You have already requested this task.');
+        }
+
+        return back()->with('error', 'You cannot request this task.');
     }
 }
