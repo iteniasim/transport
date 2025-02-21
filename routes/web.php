@@ -29,7 +29,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         ->withTrashed()
         ->name('tasks.restore');
 
-//    Route::post('tasks/{task}/claim', [TaskController::class, 'claim'])->name('tasks.claim');
-    Route::post('tasks/{task}/request', [TaskController::class, 'request'])
+    Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
+        ->name('tasks.requested.users');
+    Route::post('tasks/{task}/request', [TaskController::class, 'requestTask'])
         ->name('tasks.request');
+    Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
+        ->name('tasks.assign');
 });

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\TaskRequestNotification;
+use App\Mail\TaskAssignmentMail;
+use App\Mail\TaskRequestMail;
 use App\Models\Task;
 use App\Models\TaskRequest;
 use App\Models\User;
@@ -23,21 +24,12 @@ class TaskController extends Controller
         Gate::authorize('view_tasks');
 
         $tasks = Task::query()
-            ->when($request->has('withtrashed'), function ($query) {
-                $query->withTrashed();
-            })
-            ->when($request->has('onlytrashed'), function ($query) {
-                $query->onlyTrashed();
-            })
-            ->with(['user', 'creator', 'updater', 'requestedUsers'])
+            ->when($request->has('withtrashed'), fn($query) => $query->withTrashed())
+            ->when($request->has('onlytrashed'), fn($query) => $query->onlyTrashed())
+            ->with(['user', 'creator', 'updater'])
+            ->with(['user:id,name', 'creator:id,name', 'updater:id,name'])
+            ->withCount(['requestedUsers'])
             ->paginate(10);
-
-        // Add a flag for each task to check if the authenticated user has requested it
-        $tasks->getCollection()->transform(function ($task) {
-            $task->request_submitted = $task->request_submitted(); // Use the helper method
-            $task->makeHidden('requestedUsers');
-            return $task;
-        });
 
         $users = User::select(['id', 'name'])->get();
 
@@ -51,64 +43,21 @@ class TaskController extends Controller
     {
         Gate::authorize('create_tasks');
 
-        $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'load_type' => ['required', 'string'],
             'from' => ['required', 'string'],
             'to' => ['required', 'string'],
             'weight' => ['required', 'numeric'],
             'cost' => ['required', 'numeric', 'min:1'],
-            'user_id' => ['nullable', 'exists:users,id'],
         ]);
 
-        Task::create([
-            'name' => $request->input('name'),
-            'load_type' => $request->input('load_type'),
-            'from' => $request->input('from'),
-            'to' => $request->input('to'),
-            'weight' => $request->input('weight'),
-            'cost' => $request->input('cost'),
-            'status' => Task::STATUS_PENDING,
-            'user_id' => $request->input('user_id') ?? Auth::user()->id, // Assign current user if null
-            'created_by' => Auth::user()->id,
-        ]);
+        Task::create($data + [
+                'status' => Task::STATUS_PENDING,
+                'created_by' => Auth::id()
+            ]);
 
         return back()->with('success', 'Task created successfully.');
-    }
-
-    /**
-     * Update the specified task in storage.
-     */
-    public function update(Request $request, Task $task): RedirectResponse
-    {
-        Gate::authorize('update_tasks');
-
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'load_type' => ['required', 'string'],
-            'from' => ['required', 'string'],
-            'to' => ['required', 'string'],
-            'weight' => ['required', 'numeric'],
-            'cost' => ['required', 'numeric', 'min:1'],
-            'status' => ['required', 'integer', 'in:' . implode(',', [
-                    Task::STATUS_PENDING,
-                    Task::STATUS_IN_PROGRESS,
-                    Task::STATUS_COMPLETED,
-                ])],
-        ]);
-
-        $task->update([
-            'name' => $request->input('name'),
-            'load_type' => $request->input('load_type'),
-            'from' => $request->input('from'),
-            'to' => $request->input('to'),
-            'weight' => $request->input('weight'),
-            'cost' => $request->input('cost'),
-            'status' => $request->input('status'),
-            'updated_by' => Auth::user()->id,
-        ]);
-
-        return back()->with('success', 'Task updated successfully.');
     }
 
     /**
@@ -136,44 +85,94 @@ class TaskController extends Controller
     }
 
     /**
-     * Claim a task by assigning it to the authenticated user.
-     */
-    public function claim(Task $task): RedirectResponse
-    {
-        Gate::authorize('claim_tasks');
-
-        // Check if user_id is null or matches the authenticated user's id, and status is STATUS_PENDING
-        if (($task->user_id === null || $task->user_id === Auth::user()->id) && $task->status === Task::STATUS_PENDING) {
-            $task->updateQuietly([
-                'user_id' => Auth::user()->id,
-                'status' => Task::STATUS_IN_PROGRESS,
-            ]);
-
-            return back()->with('success', 'Task claimed successfully.');
-        }
-
-        return back()->with('error', 'You cannot claim this task.');
-    }
-
-    /**
      * Request a task from the task creator.
      */
-    public function request(Task $task)
+    public function requestTask(Task $task)
     {
         Gate::authorize('request_tasks');
 
-        if ($task->isAvailableForRequest()) {
-            if (!$task->requestedUsers()->where('user_id', auth()->id())->exists()) {
-                $task->requestedUsers()->attach(auth()->id(), ['status' => TaskRequest::STATUS_PENDING]);
-
-                Mail::to($task->creator->email)->send(new TaskRequestNotification($task));
-
-                return back()->with('success', 'Task requested successfully.');
+        if ($task->isAvailable()) {
+            if ($task->requestedUsers()->where('user_id', Auth::id())->exists()) {
+                return back()->with('info', 'You have already requested this task.');
             }
 
-            return back()->with('info', 'You have already requested this task.');
+            $task->requestedUsers()->attach(Auth::id(), ['status' => TaskRequest::STATUS_PENDING]);
+
+            Mail::to($task->creator->email)->send(new TaskRequestMail($task));
+
+            return back()->with('success', 'Task requested successfully.');
         }
 
-        return back()->with('error', 'You cannot request this task.');
+        return back()->with('error', 'This task is not available for request.');
+    }
+
+    /**
+     * List of users who requested the task.
+     */
+    public function requestedUsers(Task $task)
+    {
+        return response()
+            ->json([
+                'requestedUsers' => $task->requestedUsers()->get()
+            ]);
+    }
+
+    /**
+     * Assign a task to an available user.
+     */
+    public function assignUser(Request $request, Task $task): RedirectResponse
+    {
+        Gate::authorize('assign_tasks');
+
+        $request->validate([
+            'user_id' => ['required', 'numeric', 'exists:users,id'],
+        ]);
+
+        if ($task->isAvailable()) {
+            // Update the status for all requests in the pivot table except the user being assigned the task
+            $task->requestedUsers()->where('user_id', '!=', $request->get('user_id'))
+                ->update(['status' => TaskRequest::STATUS_REJECTED]);
+            // Update the status for the request by the user being assigned the task
+            $task->requestedUsers()->where('user_id', $request->get('user_id'))
+                ->update(['status' => TaskRequest::STATUS_ACCEPTED]);
+
+            // Assign user to the task
+            $task->updateQuietly([
+                'user_id' => $request->get('user_id'),
+                'status' => Task::STATUS_IN_PROGRESS,
+            ]);
+
+            Mail::to($task->creator->email)->send(new TaskAssignmentMail($task));
+
+            return back()->with('success', 'Task assigned successfully.');
+        }
+
+        return back()->with('error', 'This task is not available for assignment.');
+    }
+
+    /**
+     * Update the specified task in storage.
+     */
+    public function update(Request $request, Task $task): RedirectResponse
+    {
+        Gate::authorize('update_tasks');
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'load_type' => ['required', 'string'],
+            'from' => ['required', 'string'],
+            'to' => ['required', 'string'],
+            'weight' => ['required', 'numeric'],
+            'cost' => ['required', 'numeric', 'min:1'],
+            'status' => ['required', 'integer', 'in:' . implode(',', [
+                    Task::STATUS_PENDING,
+                    Task::STATUS_IN_PROGRESS,
+                    Task::STATUS_COMPLETED,
+                ])],
+        ]);
+
+        $task->update($data + ['updated_by' => Auth::id()]);
+
+        return back()->with('success', 'Task updated successfully.');
     }
 }

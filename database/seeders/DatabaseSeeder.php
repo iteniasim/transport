@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $users = User::factory(10)->withPersonalTeam()->create();
-        foreach ($users as $user) {
-            $user->assignRole('CUSTOMER');
+        foreach ($users as $index => $user) {
+            $role = $index < 5 ? 'CUSTOMER' : 'DRIVER';
+            $user->assignRole($role);
         }
     }
 }

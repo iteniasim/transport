@@ -26,7 +26,6 @@ const form = useForm({
     weight: '',
     cost: '',
     status: 0,
-    user_id: null,
 });
 
 // Watch for changes in props.task and update the form
@@ -41,7 +40,6 @@ watch(
             form.weight = newTask.weight || '';
             form.cost = newTask.cost || '';
             form.status = newTask.status || 0;
-            form.user_id = newTask.user_id || null;
         }
     },
     {immediate: true}
@@ -57,7 +55,6 @@ const emit = defineEmits(['update:modelValue']);
 
 const closeModal = () => {
     emit('update:modelValue', false);
-
     form.reset();
 }
 </script>

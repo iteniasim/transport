@@ -23,12 +23,19 @@
                             <div v-for="(task) in tasks" :key="`task-${task.id}`"
                                  class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <div class="flex justify-end">
-                                    <TaskActions :task="task" @editTask="setEditTask"/>
+                                    <TaskActions :task="task" @editTask="setEditTask" @openAssignUserModal="openAssignUserModal"/>
                                 </div>
                                 <div class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                                     {{ task.name }}
-                                    <br>
                                     <StatusBadge :color="getTaskStatusColor(task.status)" :content="getTaskStatusLabel(task.status)"/>
+                                </div>
+                                <div v-if="task.requested_users_count && !task.user"
+                                     class="mb-2 font-semibold text-gray-900 dark:text-white">
+                                    {{ driverText(task.requested_users_count) }} available.
+                                </div>
+                                <div v-else class="px-3 text-sm text-gray-500">
+                                    <span class="font-semibold">Assigned User:</span>
+                                    <span>{{ task.user?.name || '-' }}</span>
                                 </div>
                                 <div>
                                     <div class="px-3 text-sm text-gray-500">
@@ -51,10 +58,6 @@
                                         <span class="font-semibold">Cost:</span>
                                         <span>{{ task.cost }}</span>
                                     </div>
-                                    <div v-if="task.user" class="px-3 text-sm text-gray-500">
-                                        <span class="font-semibold">Assigned User:</span>
-                                        <span>{{ task.user?.name || '-' }}</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -66,10 +69,10 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import {useMappings} from "@/Composables/useMappings.js";
 import StatusBadge from "@/Components/StatusBadge.vue";
+import {useMappings} from "@/Composables/useMappings.js";
 import TaskActions from "@/Pages/Task/Actions.vue";
+import {ref} from 'vue';
 
 const props = defineProps({
     tasks: {
@@ -78,7 +81,7 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['create-task', 'edit-task']);
+const emit = defineEmits(['create-task', 'edit-task', 'assign-users']);
 
 const {getTaskStatusLabel, getTaskStatusColor} = useMappings()
 // Define the selectedTask ref to store the selected task
@@ -93,5 +96,16 @@ const setCreateTask = () => {
 const setEditTask = (task) => {
     selectedTask.value = task;
     emit('edit-task', task)
+};
+
+const openAssignUserModal = (task) => {
+    selectedTask.value = task;
+    emit('assign-users', task)
+};
+
+
+const driverText = (count) => {
+    const driverWord = count === 1 ? 'driver' : 'drivers';
+    return `${count} ${driverWord}`;
 };
 </script>

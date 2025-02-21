@@ -58,16 +58,8 @@ class Task extends Model
     /**
      * Method to check if the task is unclaimed and pending
      */
-    public function isAvailableForRequest(): bool
+    public function isAvailable(): bool
     {
         return $this->user_id === null && $this->status === self::STATUS_PENDING;
-    }
-
-    /**
-     * Check if the authenticated user has requested the task.
-     */
-    public function request_submitted(): bool
-    {
-        return $this->requestedUsers->contains('id', auth()->id());
     }
 }

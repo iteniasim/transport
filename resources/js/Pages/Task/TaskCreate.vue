@@ -21,7 +21,6 @@ const form = useForm({
     to: '',
     weight: '',
     cost: '',
-    user_id: null,
 });
 
 // Form submission
@@ -34,7 +33,6 @@ const emit = defineEmits(['update:modelValue']);
 
 const closeModal = () => {
     emit('update:modelValue', false);
-
     form.reset()
 }
 </script>
@@ -115,21 +113,6 @@ const closeModal = () => {
                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                            name="cost"
                                            type="text"/>
-                                </div>
-                            </div>
-
-                            <!-- Task Assigned To -->
-                            <div class="sm:col-span-5">
-                                <label class="block text-sm/6 font-medium text-gray-900" for="status">Assigned to</label>
-                                <div>
-                                    <select id="status" v-model="form.user_id"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            name="status">
-                                        <option :value="null">None</option>
-                                        <template v-for="user in props.users" :key="`assigned-to-${user.id}`">
-                                            <option :value="user.id">{{ user.name }}</option>
-                                        </template>
-                                    </select>
                                 </div>
                             </div>
                         </div>

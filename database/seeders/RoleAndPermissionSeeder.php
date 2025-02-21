@@ -28,7 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
 
         // Ask for roles from input
         $inputRoles = $this->command
-            ->ask('Enter roles in comma separate format. Admin has all permissions.', 'ADMIN,CUSTOMER,BUSINESS,DRIVER,DISPATCHER');
+            ->ask('Enter roles in comma separate format. Admin has all permissions.', 'ADMIN,CUSTOMER,DRIVER');
 
         // Explode roles
         $rolesArray = explode(',', $inputRoles);
@@ -44,6 +44,15 @@ class RoleAndPermissionSeeder extends Seeder
             } else {
                 // for others by default only read access
                 $role->syncPermissions(Permission::where('name', 'LIKE', 'view_%')->get());
+
+                if ($role->name === 'DRIVER') {
+                    //  DRIVER specific permissions
+                    $role->givePermissionTo(Permission::whereIn('name', ['request_tasks'])->get());
+                } elseif ($role->name === 'CUSTOMER') {
+                    //  CUSTOMER specific permissions
+                    $role->givePermissionTo(Permission::whereIn('name', ['assign_tasks'])->get());
+                }
+
                 $this->command->info('User role granted view permissions');
             }
 
@@ -51,7 +60,7 @@ class RoleAndPermissionSeeder extends Seeder
             $this->createUser($role);
         }
 
-        $this->command->info('Roles '.$inputRoles.' added successfully');
+        $this->command->info('Roles ' . $inputRoles . ' added successfully');
     }
 
     /**
