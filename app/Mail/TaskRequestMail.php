@@ -5,12 +5,11 @@ namespace App\Mail;
 use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TaskRequestNotification extends Mailable
+class TaskRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +29,7 @@ class TaskRequestNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Task Request Notification',
+            subject: 'Task Request',
         );
     }
 
@@ -40,14 +39,14 @@ class TaskRequestNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.TaskRequestNotification',
+            view: 'emails.taskRequestEmail',
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, Attachment>
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

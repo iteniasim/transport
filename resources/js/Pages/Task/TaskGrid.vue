@@ -29,9 +29,13 @@
                                     {{ task.name }}
                                     <StatusBadge :color="getTaskStatusColor(task.status)" :content="getTaskStatusLabel(task.status)"/>
                                 </div>
-                                <div v-if="task.requested_users_count"
+                                <div v-if="task.requested_users_count && !task.user"
                                      class="mb-2 font-semibold text-gray-900 dark:text-white">
                                     {{ driverText(task.requested_users_count) }} available.
+                                </div>
+                                <div v-else class="px-3 text-sm text-gray-500">
+                                    <span class="font-semibold">Assigned User:</span>
+                                    <span>{{ task.user?.name || '-' }}</span>
                                 </div>
                                 <div>
                                     <div class="px-3 text-sm text-gray-500">
@@ -53,10 +57,6 @@
                                     <div class="px-3 text-sm text-gray-500">
                                         <span class="font-semibold">Cost:</span>
                                         <span>{{ task.cost }}</span>
-                                    </div>
-                                    <div v-if="task.user" class="px-3 text-sm text-gray-500">
-                                        <span class="font-semibold">Assigned User:</span>
-                                        <span>{{ task.user?.name || '-' }}</span>
                                     </div>
                                 </div>
                             </div>
