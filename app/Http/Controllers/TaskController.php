@@ -27,7 +27,7 @@ class TaskController extends Controller
             ->when($request->has('withtrashed'), fn($query) => $query->withTrashed())
             ->when($request->has('onlytrashed'), fn($query) => $query->onlyTrashed())
             ->with(['user', 'creator', 'updater'])
-            ->with(['user:id,name', 'creator:id,name', 'updater:id,name'])
+            ->with(['user:id,name', 'creator:id,name'])
             ->withCount(['requestedUsers'])
             ->paginate(10);
 

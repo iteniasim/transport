@@ -66,7 +66,6 @@ watch(isTaskEdit, (newVal) => {
 </script>
 
 <template>
-
     <Head :title="pageTitle" />
 
     <AppLayout :breadcrumbs="breadcrumbs">

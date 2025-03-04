@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ModalComponent from '@/components/ModalComponent.vue';
 import { useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
     modelValue: {
