@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-end">
-        <Actions :task="task" @editTask="setEditTask" @openAssignUserModal="openAssignUserModal" />
+        <Actions :task="task" @editTask="emit('edit-task', task)" @assignUsers="emit('assign-users', task)" />
     </div>
     <div class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
         {{ task.name }}
@@ -45,7 +45,6 @@ import { useMappings } from '@/../composables/useMappings.js';
 const { getTaskStatusLabel, getTaskStatusColor } = useMappings();
 import Actions from '@/pages/tasks/Actions.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
-import { ref } from 'vue';
 
 defineProps({
     task: {
@@ -54,21 +53,7 @@ defineProps({
     },
 });
 
-const emit = defineEmits(['create-task', 'edit-task', 'assign-users']);
-
-// Define the selectedTask ref to store the selected task
-const selectedTask = ref(null);
-
-// Update the selectedTask when the event is emitted
-const setEditTask = (task) => {
-    selectedTask.value = task;
-    emit('edit-task', task);
-};
-
-const openAssignUserModal = (task) => {
-    selectedTask.value = task;
-    emit('assign-users', task);
-};
+const emit = defineEmits(['edit-task', 'assign-users']);
 
 const driverText = (count) => {
     const driverWord = count === 1 ? 'driver' : 'drivers';

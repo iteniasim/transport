@@ -3,14 +3,14 @@
         <!-- Other Actions -->
         <template v-if="!isTaskDeleted">
             <!-- Request Task Action -->
-            <button v-if="hasPermission('request_tasks') && !props.task.user_id" aria-label="Request Task"
+            <button v-if="hasPermission('request_tasks') && !isTaskAssigned && !isOwnTask" aria-label="Request Task"
                 class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center" type="button"
                 @click="requestTask(props.task)">
                 <UserPlus />
             </button>
 
             <!-- Assign Task Action -->
-            <button v-if="hasPermission('assign_tasks') && props.task.requested_users_count" aria-label="Assign Task"
+            <button v-if="hasPermission('assign_tasks') && props.task.requested_users_count && isOwnTask" aria-label="Assign Task"
                 class="bg-gray-50 hover:bg-gray-200 text-gray-500 font-bold py-2 px-2 rounded-full inline-flex items-center" type="button"
                 @click="assignTask(props.task)">
                 <UserCheck />
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { Trash2, Pencil, UserPlus, UserCheck, RotateCcw } from 'lucide-vue-next';
-import { router } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 import { computed } from 'vue'
 import { hasPermission } from '@/../composables/hasPermission.js';
 
@@ -53,7 +53,15 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['edit-task', 'open-assign-user-modal']);
+const emit = defineEmits(['edit-task', 'assign-users',]);
+
+const isTaskAssigned = computed(() => {
+    return !!props.task['user_id'];
+})
+
+const isOwnTask = computed(() => {
+    return props.task.creator.id == usePage().props.auth.user.id;
+})
 
 const isTaskDeleted = computed(() => {
     return !!props.task['deleted_at'];
@@ -64,7 +72,7 @@ const editAction = (task) => {
 }
 
 const assignTask = (task) => {
-    emit('open-assign-user-modal', task);
+    emit('assign-users', task);
 }
 
 const requestTask = (task) => {
