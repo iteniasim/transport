@@ -32,7 +32,7 @@ class TaskController extends Controller
 
         $users = User::select(['id', 'name'])->get();
 
-        return Inertia::render('Task/TaskIndex', compact('tasks', 'users'));
+        return Inertia::render('tasks/TaskIndex', compact('tasks', 'users'));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,5 +25,7 @@ class DatabaseSeeder extends Seeder
             $role = $index < 5 ? 'CUSTOMER' : 'DRIVER';
             $user->assignRole($role);
         }
+
+        Task::factory(10)->create();
     }
 }

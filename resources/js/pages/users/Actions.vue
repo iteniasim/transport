@@ -6,17 +6,17 @@
         </button>
         <button class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
                 v-if="!props.user['deleted_at']" aria-label="Delete User" @click="deleteAction(props.user)">
-            <Archive />
+            <Trash2 />
         </button>
         <button v-else class="bg-red-50 hover:bg-red-200 text-red-500 font-bold py-2 px-2 rounded-full inline-flex items-center"
                 aria-label="Restore User" @click="restoreAction(props.user)">
-            <ArchiveRestore />
+            <RotateCcw />
         </button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Archive, Pencil, ArchiveRestore } from 'lucide-vue-next';
+import { Trash2, Pencil, RotateCcw } from 'lucide-vue-next';
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
