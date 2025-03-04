@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskUser;
 use App\Models\User;
 use App\Notifications\TaskAssigned;
 use App\Notifications\TaskRequested;
@@ -95,9 +96,9 @@ class TaskController extends Controller
                 return back()->with('info', 'You have already requested this task.');
             }
 
-            $task->requestedUsers()->attach(Auth::id(), ['status' => TaskRequest::STATUS_PENDING]);
+            $task->requestedUsers()->attach(Auth::id(), ['status' => TaskUser::STATUS_PENDING]);
 
-            auth()->user()->notify(new TaskRequested($task));
+            $task->creator->notify(new TaskRequested($task));
 
             return back()->with('success', 'Task requested successfully.');
         }
@@ -130,10 +131,10 @@ class TaskController extends Controller
         if ($task->isAvailable()) {
             // Update the status for all requests in the pivot table except the user being assigned the task
             $task->requestedUsers()->where('user_id', '!=', $request->get('user_id'))
-                ->update(['status' => TaskRequest::STATUS_REJECTED]);
+                ->update(['status' => TaskUser::STATUS_REJECTED]);
             // Update the status for the request by the user being assigned the task
             $task->requestedUsers()->where('user_id', $request->get('user_id'))
-                ->update(['status' => TaskRequest::STATUS_ACCEPTED]);
+                ->update(['status' => TaskUser::STATUS_ACCEPTED]);
 
             // Assign user to the task
             $task->updateQuietly([
