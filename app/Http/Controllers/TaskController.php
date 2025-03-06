@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -111,6 +110,8 @@ class TaskController extends Controller
      */
     public function requestedUsers(Task $task)
     {
+        Gate::authorize('view_tasks');
+
         return response()
             ->json([
                 'requestedUsers' => $task->requestedUsers()->get()
@@ -144,6 +145,8 @@ class TaskController extends Controller
 
             $assignedUser = User::find($request->get('user_id'));
             $assignedUser->notify(new TaskAssigned($task));
+
+            //  todo: i want another notification for all the users whose request were rejected here
 
             return back()->with('success', 'Task assigned successfully.');
         }
