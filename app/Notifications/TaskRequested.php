@@ -52,6 +52,10 @@ class TaskRequested extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->task->toArray();
+        return [
+            'task_id' => $this->task->id,
+            "user_id" => $this->task->creator->id,
+            "message" => "A new task has been created for you.",
+        ];
     }
 }

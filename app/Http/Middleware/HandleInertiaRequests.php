@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
 
         if (Auth::check()) {
             $request->user()->getAllPermissions();
+            $request->user()?->load(['notifications']);
         }
 
         return [
