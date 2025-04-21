@@ -18,6 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::resource('tasks', TaskController::class)->except(['index']);
+    Route::post('tasks/{task}', [TaskController::class, 'restore'])
+        ->name('tasks.restore');
+
     // Admin-only routes
     Route::middleware('role:ADMIN')->group(function () {
         Route::resource('users', UserController::class)->only(['index', 'update', 'destroy']);
@@ -25,10 +29,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('users.restore');
 
         Route::resource('roles', RoleController::class)->only(['index', 'store', 'update', 'destroy']);
-
-        Route::resource('tasks', TaskController::class)->except(['index']);
-        Route::post('tasks/{task}', [TaskController::class, 'restore'])
-            ->name('tasks.restore');
 
         Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
             ->name('tasks.requested.users');

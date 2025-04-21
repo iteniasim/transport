@@ -20,8 +20,6 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('view_tasks');
-
         $tasks = Task::query()
             ->when($request->has('withtrashed'), fn($query) => $query->withTrashed())
             ->when($request->has('onlytrashed'), fn($query) => $query->onlyTrashed())

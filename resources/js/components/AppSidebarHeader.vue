@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { hasRole } from '@/../composables/hasPermission.js';
+import { hasRole, isAuthenticated } from '@/../composables/hasPermission.js';
 import AppNotifications from '@/components/AppNotifications.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
+import { Link } from '@inertiajs/vue3';
 import NavUser from './NavUser.vue';
 
 defineProps<{
@@ -22,8 +23,22 @@ defineProps<{
         </div>
 
         <div class="flex items-center gap-5">
-            <AppNotifications />
-            <NavUser v-if="!hasRole('ADMIN')" />
+            <template v-if="isAuthenticated()">
+                <AppNotifications />
+                <NavUser v-if="!hasRole('ADMIN')" />
+            </template>
+            <template v-else>
+                <div class="flex items-center gap-5">
+                    <Link :href="route('login')"
+                        class="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]">
+                    Log in
+                    </Link>
+                    <Link :href="route('register')"
+                        class="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]">
+                    Register
+                    </Link>
+                </div>
+            </template>
         </div>
     </header>
 </template>
