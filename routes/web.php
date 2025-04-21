@@ -25,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('tasks.request');
     Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
         ->name('tasks.assign');
+    Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
+        ->name('tasks.requested.users');
 
     // Admin-only routes
     Route::middleware('role:ADMIN')->group(function () {
@@ -33,9 +35,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('users.restore');
 
         Route::resource('roles', RoleController::class)->only(['index', 'store', 'update', 'destroy']);
-
-        Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
-            ->name('tasks.requested.users');
     });
 });
 
