@@ -21,6 +21,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('tasks', TaskController::class)->except(['index']);
     Route::post('tasks/{task}', [TaskController::class, 'restore'])
         ->name('tasks.restore');
+    Route::post('tasks/{task}/request', [TaskController::class, 'requestTask'])
+        ->name('tasks.request');
+    Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
+        ->name('tasks.assign');
 
     // Admin-only routes
     Route::middleware('role:ADMIN')->group(function () {
@@ -32,10 +36,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
             ->name('tasks.requested.users');
-        Route::post('tasks/{task}/request', [TaskController::class, 'requestTask'])
-            ->name('tasks.request');
-        Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
-            ->name('tasks.assign');
     });
 });
 
