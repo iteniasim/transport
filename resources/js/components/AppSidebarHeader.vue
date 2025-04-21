@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { hasRole } from '@/../composables/hasPermission.js';
+import AppNotifications from '@/components/AppNotifications.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
-import AppNotifications from '@/components/AppNotifications.vue';
+import NavUser from './NavUser.vue';
 
 defineProps<{
     breadcrumbs?: BreadcrumbItemType[];
@@ -19,8 +21,9 @@ defineProps<{
             </template>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-5">
             <AppNotifications />
+            <NavUser v-if="!hasRole('ADMIN')" />
         </div>
     </header>
 </template>

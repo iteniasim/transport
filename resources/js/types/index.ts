@@ -33,4 +33,15 @@ export interface User {
     updated_at: string;
 }
 
+export interface Role {
+    id: number;
+    name: string;
+    permissions: string[] | number[];
+}
+
+export interface Permission {
+    id: number;
+    name: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

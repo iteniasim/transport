@@ -8,6 +8,7 @@
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                 <button
+                    v-if="hasPermission('create_tasks')"
                     class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     type="button" @click="emit('create-task')">
                     Add task
@@ -34,6 +35,7 @@
 
 <script setup lang="ts">
 import TaskItem from '@/pages/tasks/TaskItem.vue';
+import { hasPermission } from '@/../composables/hasPermission.js';
 
 defineProps({
     tasks: {

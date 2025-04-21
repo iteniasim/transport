@@ -1,35 +1,42 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return redirect()->route('tasks.index');
 })->name('home');
+
+// Publicly accessible tasks index
+Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::resource('users', UserController::class)->only(['index', 'update', 'destroy']);
-    Route::post('users/{user}', [UserController::class, 'restore'])
-        ->withTrashed()
-        ->name('users.restore');
+    // Admin-only routes
+    Route::middleware('role:ADMIN')->group(function () {
+        Route::resource('users', UserController::class)->only(['index', 'update', 'destroy']);
+        Route::post('users/{user}', [UserController::class, 'restore'])
+            ->name('users.restore');
 
-    Route::resource('tasks', TaskController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::post('tasks/{task}', [TaskController::class, 'restore'])
-        ->withTrashed()
-        ->name('tasks.restore');
+        Route::resource('roles', RoleController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
-        ->name('tasks.requested.users');
-    Route::post('tasks/{task}/request', [TaskController::class, 'requestTask'])
-        ->name('tasks.request');
-    Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
-        ->name('tasks.assign');
+        Route::resource('tasks', TaskController::class)->except(['index']);
+        Route::post('tasks/{task}', [TaskController::class, 'restore'])
+            ->name('tasks.restore');
+
+        Route::get('tasks/{task}/request/users', [TaskController::class, 'requestedUsers'])
+            ->name('tasks.requested.users');
+        Route::post('tasks/{task}/request', [TaskController::class, 'requestTask'])
+            ->name('tasks.request');
+        Route::post('tasks/{task}/assign', [TaskController::class, 'assignUser'])
+            ->name('tasks.assign');
+    });
 });
 
 require __DIR__ . '/settings.php';
